@@ -1,0 +1,4 @@
+MAE for Simple moving average: 137.08 g_CO2/kWh
+MAPE for Simple moving average: 26.729999999999997 %
+RMSE for Simple moving average: 161.66 g_CO2/kWh
+R2 Simple moving average: -25.88 %

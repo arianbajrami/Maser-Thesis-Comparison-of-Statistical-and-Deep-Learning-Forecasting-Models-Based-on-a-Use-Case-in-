@@ -1,0 +1,9 @@
+MAE for Exponential Smoothing: 69.8 g_CO2/kWh
+MAPE for Exponential Smoothing: 14.06 %
+RMSE for Exponential Smoothing: 91.07 g_CO2/kWh
+Pinball for lower Quantile Exponential Smoothing: 4.9 g_CO2/kWh
+Pinball for higher Quantile Exponential Smoothing: 12.13 g_CO2/kWh
+Interval Score Exponential Smoothing: 291.7637 g_CO2/kWh
+Real Values insisde PI Exponential Smoothing: 84.82 %
+R2 Exponential Smoothing: 60.06 %
+Adjusted R2 Exponential Smoothing: 59.69 %

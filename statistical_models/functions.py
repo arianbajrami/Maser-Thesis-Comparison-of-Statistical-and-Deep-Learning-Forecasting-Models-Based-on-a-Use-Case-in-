@@ -39,7 +39,7 @@ def simple_average(data):
 
     return np.mean(data)
 
-def pred_avg(data, simple_average):
+def pred_avg(data,test, forecast_period):
     """
     pred_avg: make a simple aveage prediction
 
@@ -51,11 +51,13 @@ def pred_avg(data, simple_average):
     -----------
     simple average prediction of dataset
     """
-    preds = []
-    for x in range(len(data)):
-        x = simple_average
-        preds.append(x)
-    return preds
+    pred = []
+    for j in range(int(test.index[0]), test.index[-1], forecast_period):
+        pred_update = np.mean(data[:j])
+        for k in range(forecast_period):
+            pred.append(pred_update)
+    report = evaluation_without_uncertainty(pred, test, 'Simple moving average')
+    return pred,report
 
 
 ## Naive 1
@@ -97,25 +99,52 @@ def naive_forecast(data,train):
 
 ## Naive 2
 
-def naive_forecast_2(train, test):
+def naive_forecast_2(train, forecast_period):
     """
     make naive forecast, the 24 last values are the prediction
 
     parameter
     ---------
-    data: dataset of time series
-    simple_average: mean of the data set
-    
     train: train dataset 
+    forecast_period: forecast length
 
     returns
     -----------
     naive forecast of the values of the previous day
     """
-    train_lag = train.shift(24)
-    naive_pred = train_lag[len(train) - len(test) :]
+    train_lag = train.shift(forecast_period)
+    naive_pred = train_lag[len(train_lag)-forecast_period :]
     return naive_pred
 
+def naive_forward_forecast(train, test, data, forecast_period):
+    """
+    make simple moving average predictions for the given forecast period
+
+    parameter
+    ---------
+    train: train dataset of time series
+    test: test dataset of time series
+    data: dataset of time series
+    sma_windwo: sliding window for the moving aveage
+    forecast_period: length of forecast period
+    
+    returns
+    -----------
+    pred: simple moving average prediction for the lenth of the given test set
+    report: evaluation metrics for forecast
+    """
+    pred = []
+    for j in range(int(test.index[0]), test.index[-1], forecast_period):
+        print(j)
+        pred_update = naive_forecast_2(data[:j], forecast_period)
+        print(pred_update)
+        for k in pred_update:
+            pred.append(k)
+        #train = data[j:j+forecast_period]
+        #print(train)
+        #assert(len(train) == len(pred_update))
+    report = evaluation_without_uncertainty(pred, test, 'simple moving average')
+    return pred,report
 
 ## Simple moving aveage
 def simple_moving_average(data, sma_window, forecast_period):
@@ -220,7 +249,7 @@ def walk_forwad_validation_hw(test,train,data, forecast_period, alpha_low, alpha
         train = train.append(data[j:j+forecast_period])
     
     # calcualte the error metrics
-    report = evaluation(pred, test, 'Hold Winters exp. smoothing')
+    report = evaluation(pred, lower, upper, test,alpha_low,alpha_high,n_features = 32, method = 'Exponential Smoothing')
     # return everything
     return pred,lower,upper, report
 
@@ -276,7 +305,7 @@ def walk_forwad_validation_arima(test, forecast_period, res,alpha_low, alpha_hig
     return pred,report,lower,upper
 
 # SARIMAX
-def walk_forward_validation_sarimax(test_x,test_y, forecast_period, res, alpha_low, alpha_high,n_features, method, refit:bool):
+def walk_forward_validation_sarimax(test_x,test_y, forecast_period, res, alpha_low, alpha_high,n_features, method):
     """
     make (S)ARIMAX predictions for the given forecast period
 
@@ -290,7 +319,6 @@ def walk_forward_validation_sarimax(test_x,test_y, forecast_period, res, alpha_l
     alpha_high: higher percentile
     n_features: number of features
     method: type of prediction model
-    refit->boool: wether to refit the model or not
 
     returns
     -----------
@@ -327,10 +355,7 @@ def walk_forward_validation_sarimax(test_x,test_y, forecast_period, res, alpha_l
         
         # update the prediction model with new data
         # Select refit = TRUE if you want to refit the model
-        if refit == True:
-            res = res.append(train_update,exog = x_update, refit = True)
-        else:
-            res = res.append(train_update,exog = x_update, refit = False)
+        res = res.append(train_update,exog = x_update, refit = False)
     
     # get error metrics
     report =  evaluation(pred,lower,upper, test_y,alpha_low,alpha_high,n_features, method)
@@ -418,22 +443,19 @@ def walk_forward_ML(train_x,test_x,train_y,test_y,model,forecast_period,method):
     return pred,report 
 
 # walk forwrd for ensemble model
-def walk_forward_shallow(tscv, model, data, features, test,alpha_low, alpha_high,n_features, method,  refit : bool):
+def walk_forward_shallow(tscv, model, data, features, test,alpha_low, alpha_high,n_features, method):
     """"
     walk_forward_shallow: make a walk forward validation for a given ensemble method
     tscv: object that contains walk forward split of the data set
 
     Parameters
     -------
-    tscv: time series split
     model: predifined ensemble method
-    data: target variable for prediction
-    features: features for prediction
+    data: given data-set
     test: test set of the data set
     alpha_low: lower percentile
     alpha_high: upper percentile
     n_features: number of features
-    refit->Bool: if trure refit model, if flase dont refit model after each prediction horizon is completed
     method: type of ensemble method
 
     Returns
@@ -449,16 +471,10 @@ def walk_forward_shallow(tscv, model, data, features, test,alpha_low, alpha_high
     lower = [] # list for saving the lower percentiles
     upper = [] # list for saving the upper perecenitls
 
-    # Dont refit the model if refit = False
-    if refit == False:
-        train_len = int(len(data) - len(test))
-        model_fit = model.fit(features.values[:train_len],data[:train_len])
-
     #make wal forward validation
     for train_index, test_index in tscv.split(data):
-        # refitting of the model each time the training set is increased if refit = true
-        if refit == True:
-            model_fit = model.fit(features.values[train_index],data[train_index])
+        # refitting of the model each time the training set is increased
+        model_fit = model.fit(features.values[train_index],data[train_index])
         # make uncertainty prediction based on the current training set
         lower_temp, pred_temp, upper_temp = predict_uncertaitny(model_fit,features.values[test_index],alpha_low, alpha_high)
         # save the predictions in lists 
@@ -489,7 +505,7 @@ def interval_score(test_y, alpha, pred_low, pred_high):
     test_y: test data of the target
     alpha: width of prediction intervall
     pred_low: lower quantile predictions
-    pred_hihg: higher quantile predictions
+    pred_high: higher quantile predictions
 
     returns
     --------
@@ -593,6 +609,56 @@ def evaluation(pred, lower, upper, test,alpha_low,alpha_high,n_features, method)
     report = '\n'.join(report)
     return report
 
+def evaluation_lstm(pred, lower, upper, test,alpha_low,alpha_high,n_features, method):
+    """
+    ealutaion: evaluate the given method
+
+    paramaters
+    -------
+    pred: average prediction results
+    lower: lower quantile predictions
+    uppper: upper quantile predictions
+    test: test set of the target variable
+    alpha_low: lower percentile
+    alpha_hihg: higher percentile
+    n_features: Number of features
+    method: type of method
+    
+    returns
+    -------
+    report: report of the evalutaion metrics
+
+    """  
+    # calculate width of prediction intevall:
+    alpha = alpha_high - alpha_low
+
+    # start evaluation
+    mae = mean_absolute_error(test, pred)
+    mape = mean_absolute_percentage_error(test, pred)
+    rmse = mean_squared_error(test, pred, squared = False)
+    R2 = r2_score(test,pred)
+    Adj_r2 = 1-(1-R2)*(len(test)-1)/(len(test)-n_features-1)
+    pinball_low = mean_pinball_loss(test,lower,alpha = alpha_low)
+    pinball_high = mean_pinball_loss(test,upper,alpha = alpha_high)
+    ival_score = interval_score(test, alpha, lower, upper)
+    #width = np.abs(np.mean(np.array(lower) - np.array(upper)))
+    inside = round((np.sum([lower[i] <= test[i] <= upper[i] for i in range(len(test))]) / len(test)) * 100, 2)
+
+    # add results to  report
+    report = []
+    report.append(f'MAE for {method}: {np.round(mae,2)} g_CO2/kWh')
+    report.append(f'MAPE for {method}: {np.round(mape,4)*100} %')
+    report.append(f'RMSE for {method}: {np.round(rmse,2)} g_CO2/kWh')
+    report.append(f'Pinball for lower Quantile {method}: {np.round(pinball_low,2)} g_CO2/kWh')
+    report.append(f'Pinball for higher Quantile {method}: {np.round(pinball_high,2)} g_CO2/kWh')
+    report.append(f'Interval Score {method}: {np.round(ival_score,4)} g_CO2/kWh')
+    #report.append(f'Average width of PI {method}: {np.round(width,2)} g_CO2/kWh')
+    report.append(f'Real Values insisde PI {method}: {np.round(inside,4)} %')
+    report.append(f'R2 {method}: {np.round(R2,4)*100 } %')
+    report.append(f'Adjusted R2 {method}: {np.round(Adj_r2,4)*100} %')
+    report = '\n'.join(report)
+    return report
+
 
 ##########################
 ## Plotting
@@ -617,7 +683,7 @@ colours = {'black': [0,0,0],
 
 
 # plot non - probablistic models
-def plot_model(test, pred, slice_start, slice_end, method):
+def plot_model(test, pred, date, slice_start, slice_end, method):
     """
     plot the prediction results
 
@@ -628,22 +694,29 @@ def plot_model(test, pred, slice_start, slice_end, method):
     slice_start: beginn of plotting
     slice_end: end of plotting
     method: type of method
-    """  
+    date: datetime DataFrame with period length of the test data
+    """
+    
+    test_plot = test.copy()
+    test_plot.index = date.values
+    pred_plot = pred.copy()
+    pred_plot.index = date.values
+   
+
     plt.figure(figsize = (24,8))
-    test_slice = test.iloc[slice_start:slice_end]
-    pred_slice = pred.iloc[slice_start:slice_end]
-    plt.plot(test_slice, label = 'Test Data', color = colours.get('gold'))
+    test_slice = test_plot.loc[slice_start:slice_end]
+    pred_slice = pred_plot.loc[slice_start:slice_end]
+    plt.plot(test_slice, label = 'Test data', color = colours.get('gold'))
     plt.plot(pred_slice, label = method, color = colours.get('1B'))
     plt.title(method)
-    plt.xlabel('prediction step / h')
-    plt.ylabel('co2 emmsiosn factor / g_CO2/kWh')
+    plt.xlabel('Time in h')
+    plt.ylabel('$CO_2$ emission factor in $g_{CO2}/kWh$')
+    plt.rcParams.update({'font.size': 18})
     plt.grid()
     plt.legend(loc = 'best')
     plt.show()
 
 
-# plot probabilistic models
-# plot probabilistic models
 # plot probabilistic models
 def plot_model_uncertainty(test, pred, lower, upper, date, slice_start, slice_end, method):
     """
@@ -734,8 +807,6 @@ def plot_model_uncertainty2(test, pred, lower, upper, date, slice_start, slice_e
     plt.grid()
     plt.legend(loc = 'best')
     plt.show()
-
-
 
 
 ########################################
