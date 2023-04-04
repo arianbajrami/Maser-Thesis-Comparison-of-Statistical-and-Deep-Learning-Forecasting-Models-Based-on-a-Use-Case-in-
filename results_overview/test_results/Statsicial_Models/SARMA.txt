@@ -1,0 +1,9 @@
+MAE for SARMA: 65.03 g_CO2/kWh
+MAPE for SARMA: 13.120000000000001 %
+RMSE for SARMA: 93.69 g_CO2/kWh
+Pinball for lower Quantile SARMA: 5.68 g_CO2/kWh
+Pinball for higher Quantile SARMA: 6.2 g_CO2/kWh
+Interval Score SARMA: 360.6758 g_CO2/kWh
+Real Values insisde PI SARMA: 96.4 %
+R2 SARMA: 57.720000000000006 %
+Adjusted R2 SARMA: 57.720000000000006 %

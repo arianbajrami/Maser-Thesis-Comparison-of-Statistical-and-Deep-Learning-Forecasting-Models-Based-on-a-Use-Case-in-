@@ -1,0 +1,9 @@
+MAE for SARMAX: 48.02 g_CO2/kWh
+MAPE for SARMAX: 9.16 %
+RMSE for SARMAX: 63.64 g_CO2/kWh
+Pinball for lower Quantile SARMAX: 3.4 g_CO2/kWh
+Pinball for higher Quantile SARMAX: 6.02 g_CO2/kWh
+Interval Score SARMAX: 176.4253 g_CO2/kWh
+Real Values insisde PI SARMAX: 86.76 %
+R2 SARMAX: 80.49 %
+Adjusted R2 SARMAX: 80.31 

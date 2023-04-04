@@ -1,0 +1,9 @@
+MAE for Gradient Boosting: 40.66 g_CO2/kWh
+MAPE for Gradient Boosting: 8.17 %
+RMSE for Gradient Boosting: 62.1 g_CO2/kWh
+Pinball for lower Quantile Gradient Boosting: 5.05 g_CO2/kWh
+Pinball for higher Quantile Gradient Boosting: 5.32 g_CO2/kWh
+Interval Score Gradient Boosting: 165.1303 g_CO2/kWh
+Real Values insisde PI Gradient Boosting: 84.47 %
+R2 Gradient Boosting: 81.43 %
+Adjusted R2 Gradient Boosting: 81.26 %

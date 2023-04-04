@@ -1,0 +1,4 @@
+MAE for Linear_Regression: 49.59 g_CO2/kWh
+MAPE for Linear_Regression: 10.16 %
+RMSE for Linear_Regression: 70.03 g_CO2/kWh
+R2 Linear_Regression: 76.38000000000001 %

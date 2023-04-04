@@ -1,0 +1,9 @@
+MAE for Baggging Regression: 41.78 g_CO2/kWh
+MAPE for Baggging Regression: 8.58 %
+RMSE for Baggging Regression: 61.19 g_CO2/kWh
+Pinball for lower Quantile Baggging Regression: 4.69 g_CO2/kWh
+Pinball for higher Quantile Baggging Regression: 4.37 g_CO2/kWh
+Interval Score Baggging Regression: 190.7121 g_CO2/kWh
+Real Values insisde PI Baggging Regression: 88.76 %
+R2 Baggging Regression: 81.97 %
+Adjusted R2 Baggging Regression: 81.8 %

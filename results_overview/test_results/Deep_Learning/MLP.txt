@@ -1,0 +1,9 @@
+MAE for MLP: 51.15 g_CO2/kWh
+MAPE for MLP: 10.059999999999999 %
+RMSE for MLP: 72.1 g_CO2/kWh
+Pinball for lower Quantile MLP: 6.19 g_CO2/kWh
+Pinball for higher Quantile MLP: 19.95 g_CO2/kWh
+Interval Score MLP: 126.2252 g_CO2/kWh
+Real Values insisde PI MLP: 50.0 %
+R2 MLP: 74.96000000000001 %
+Adjusted R2 MLP: 74.72999999999999 %

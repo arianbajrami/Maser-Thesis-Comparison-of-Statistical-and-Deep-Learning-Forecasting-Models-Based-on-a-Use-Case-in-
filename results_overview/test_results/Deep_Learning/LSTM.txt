@@ -1,0 +1,8 @@
+MAE for LSTM: 50.36 g_CO2/kWh
+MAPE for LSTM: 9.77 %
+RMSE for LSTM: 67.71 g_CO2/kWh
+Pinball for lower Quantile LSTM: 6.92 g_CO2/kWh
+Pinball for higher Quantile LSTM: 11.48 g_CO2/kWh
+Interval Score LSTM: 183.5219 g_CO2/kWh
+R2 LSTM: 77.16 %
+Adjusted R2 LSTM: 76.95 %

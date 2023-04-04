@@ -1,0 +1,9 @@
+MAE for CNN: 42.4 g_CO2/kWh
+MAPE for CNN: 8.7 %
+RMSE for CNN: 64.08 g_CO2/kWh
+Pinball for lower Quantile CNN: 7.48 g_CO2/kWh
+Pinball for higher Quantile CNN: 9.86 g_CO2/kWh
+Interval Score CNN: 129.4138 g_CO2/kWh
+Real Values insisde PI CNN: 66.41 %
+R2 CNN: 80.22 %
+Adjusted R2 CNN: 80.04 %

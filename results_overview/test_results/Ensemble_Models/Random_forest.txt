@@ -1,0 +1,9 @@
+MAE for Random Forest Regression: 42.7 g_CO2/kWh
+MAPE for Random Forest Regression: 8.62 %
+RMSE for Random Forest Regression: 57.61 g_CO2/kWh
+Pinball for lower Quantile Random Forest Regression: 4.29 g_CO2/kWh
+Pinball for higher Quantile Random Forest Regression: 3.16 g_CO2/kWh
+Interval Score Random Forest Regression: 259.6592 g_CO2/kWh
+Real Values insisde PI Random Forest Regression: 96.03 %
+R2 Random Forest Regression: 84.00999999999999 %
+Adjusted R2 Random Forest Regression: 83.87 %
