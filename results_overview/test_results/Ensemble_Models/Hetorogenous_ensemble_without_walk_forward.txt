@@ -1,0 +1,9 @@
+MAE for Het Ensemble: 75.22 g_CO2/kWh
+MAPE for Het Ensemble: 13.4 %
+RMSE for Het Ensemble: 92.78 g_CO2/kWh
+Pinball for lower Quantile Het Ensemble: 6.33 g_CO2/kWh
+Pinball for higher Quantile Het Ensemble: 18.55 g_CO2/kWh
+Interval Score Het Ensemble: 278.4393 g_CO2/kWh
+Real Values insisde PI Het Ensemble: 53.3 %
+R2 Het Ensemble: 57.11000000000001 %
+Adjusted R2 Het Ensemble: 56.71000000000001 %
